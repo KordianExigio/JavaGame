@@ -26,7 +26,7 @@ public class SQL {
                 String name = resultSet.getString("nazwa");
                 String haslo = resultSet.getString("haslo");
 
-                //System.out.println("ID: " + id + ", Name: " + name + " Haslo: " + haslo);
+                System.out.println("ID: " + id + ", Name: " + name + " Haslo: " + haslo);
                 rekordy[i][0] = id;
                 rekordy[i][1] = name;
                 rekordy[i][2] = haslo;

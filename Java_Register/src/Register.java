@@ -81,12 +81,12 @@ public class Register implements ActionListener {
             String haslo2 = polePowtorzHaslo.getText();
 
             String query = "INSERT INTO `uzytkownicy`(`nazwa`, `haslo`) VALUES ('" + nazwa +"','" + haslo +"')";
-//            try {
-//                sql.QUERY(query);
-//                System.out.println("Dodano do bazy");
-//            } catch (SQLException ex) {
-//                throw new RuntimeException(ex);
-//            }
+            try {
+                sql.QUERY(query);
+                System.out.println("Dodano do bazy");
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
 
 
             if(nazwa.length() > 3 && haslo.length() > 3 && haslo2.equals(haslo)){
