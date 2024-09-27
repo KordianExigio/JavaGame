@@ -78,26 +78,35 @@ public class Login implements ActionListener {
             String[][] rekord;
 
 
-            String query = "SELECT nazwa, haslo FROM uzytkownicy WHERE nazwa = " + nazwa + " AND haslo = " + haslo;
-//            try {
-//                sql.QUERY(query);
-//                System.out.println("Dodano do bazy");
-//            } catch (SQLException ex) {
-//                throw new RuntimeException(ex);
-//            }
+            String query = "SELECT id,nazwa, haslo FROM uzytkownicy WHERE nazwa = '" + nazwa +"' AND haslo = '"+ haslo + "'";
+//
 
 
             if(nazwa.length() > 3 && haslo.length() > 3){
                 try {
                     rekord = sql.SELECT(query);
-                    System.out.println(rekord);
+                    System.out.println("ID: " + rekord[0][0] + ", Name: " + rekord[0][1] + " Haslo: " + rekord[0][2]);
+                    System.out.println("Podane ID: " + 0 + ", Name: " + nazwa + " Haslo: " + haslo);
+
+
+                    if (rekord[0][1] == null && rekord[0][2] == null) {
+                        System.out.println("Nie zalogowano");
+                        poleHaslo.setText("");
+                        poleNazwaUzytkownika.setText("");
+
+                        labelKomunikat.setText("Nieprawidlowe haslo lub nazwa");
+                        labelKomunikat.setForeground(Color.RED);
+                    }else if(rekord[0][1].equals(nazwa) && rekord[0][2].equals(haslo)){
+                        new Register();
+                        frame.setVisible(false);
+                    }
 
 
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
             }else{
-
+                System.out.println("czemó");
             }
 
         }
