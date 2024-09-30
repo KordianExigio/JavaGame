@@ -12,6 +12,8 @@ public class Register implements ActionListener {
     JPasswordField poleHaslo;
     JPasswordField  polePowtorzHaslo;
     JButton submitBtn;
+
+    JButton loginBtn;
     JLabel labelNazwa;
     JLabel labelHaslo;
     JLabel labelPowtorzHaslo;
@@ -51,8 +53,12 @@ public class Register implements ActionListener {
         submitBtn.setBounds(100, 140, 150, 30);
         submitBtn.addActionListener(this);
 
+        loginBtn = new JButton("Zaloguj się");
+        loginBtn.setBounds(100, 180, 150, 30);
+        loginBtn.addActionListener(this);
+
         labelKomunikat = new JLabel("");
-        labelKomunikat.setBounds(50, 180, 250, 25);
+        labelKomunikat.setBounds(50, 200, 250, 25);
 
 
         panel.add(labelNazwa);
@@ -62,6 +68,7 @@ public class Register implements ActionListener {
         panel.add(labelPowtorzHaslo);
         panel.add(polePowtorzHaslo);
         panel.add(submitBtn);
+        panel.add(loginBtn);
         panel.add(labelKomunikat);
 
 
@@ -76,6 +83,7 @@ public class Register implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == submitBtn){
+            sql.connect();
             String nazwa = poleNazwaUzytkownika.getText();
             String haslo = poleHaslo.getText();
             String haslo2 = polePowtorzHaslo.getText();
@@ -97,6 +105,19 @@ public class Register implements ActionListener {
                 polePowtorzHaslo.setText("");
                 labelKomunikat.setText("Poprawnie utworzono konto");
                 labelKomunikat.setForeground(Color.GREEN);
+
+                try {
+                    sql.SELECT("SELECT id,nazwa, haslo FROM uzytkownicy WHERE nazwa = '" + nazwa +"' AND haslo = '"+ haslo + "'");
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                int UserID = Integer.parseInt(sql.UserData[0][0]);
+                try {
+                    new Menu(UserID);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                frame.dispose();
             }else{
                 poleNazwaUzytkownika.setText("");
                 poleHaslo.setText("");
@@ -106,6 +127,11 @@ public class Register implements ActionListener {
                 labelKomunikat.setForeground(Color.RED);
             }
 
+        }
+
+        if(e.getSource() == loginBtn){
+            new Login();
+            frame.dispose();
         }
     }
 }

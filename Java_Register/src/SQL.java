@@ -6,7 +6,9 @@ public class SQL {
     String password = "";
     Connection connection;
 
-    SQL(){
+    String[][] UserData;
+
+    public void connect(){
         System.out.println("Connecting database ...");
         try{
             connection = DriverManager.getConnection(url, username, password);
@@ -15,9 +17,13 @@ public class SQL {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
-
-    public String[][] SELECT(String query) throws SQLException {
+    public void SELECT(String query) throws SQLException {
             String[][] rekordy = new String[20][20];
+
+        if (connection == null || connection.isClosed()) {
+            connect(); // Nawiąż połączenie, jeśli nie jest aktywne
+        }
+
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
@@ -32,7 +38,7 @@ public class SQL {
                 rekordy[i][2] = haslo;
             }
 
-            return rekordy;
+            UserData = rekordy;
     }
 
      //QUERY moze dodawac, usuwac i update !!   AUTOR: Maciek Kubis

@@ -18,6 +18,8 @@ public class Login implements ActionListener {
     SQL sql = new SQL();
     JPasswordField poleHaslo;
     JButton submitBtn;
+
+    JButton registerBtn;
     JLabel labelNazwa;
     JLabel labelHaslo;
     JLabel labelKomunikat;
@@ -50,6 +52,11 @@ public class Login implements ActionListener {
         submitBtn.setBounds(100, 100, 150, 30);
         submitBtn.addActionListener(this);
 
+
+        registerBtn = new JButton("Utworz konto");
+        registerBtn.setBounds(100, 140, 150, 30);
+        registerBtn.addActionListener(this);
+
         labelKomunikat = new JLabel("");
         labelKomunikat.setBounds(50, 180, 250, 25);
 
@@ -59,6 +66,7 @@ public class Login implements ActionListener {
         panel.add(labelHaslo);
         panel.add(poleHaslo);
         panel.add(submitBtn);
+        panel.add(registerBtn);
         panel.add(labelKomunikat);
 
 
@@ -75,30 +83,34 @@ public class Login implements ActionListener {
         if(e.getSource() == submitBtn){
             String nazwa = poleNazwaUzytkownika.getText();
             String haslo = poleHaslo.getText();
-            String[][] rekord;
+
 
 
             String query = "SELECT id,nazwa, haslo FROM uzytkownicy WHERE nazwa = '" + nazwa +"' AND haslo = '"+ haslo + "'";
-//
+            try {
+                sql.SELECT(query);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
 
 
             if(nazwa.length() > 3 && haslo.length() > 3){
                 try {
-                    rekord = sql.SELECT(query);
-                    System.out.println("ID: " + rekord[0][0] + ", Name: " + rekord[0][1] + " Haslo: " + rekord[0][2]);
+                    System.out.println("ID: " + sql.UserData[0][0] + ", Name: " + sql.UserData[0][1] + " Haslo: " + sql.UserData[0][2]);
                     System.out.println("Podane ID: " + 0 + ", Name: " + nazwa + " Haslo: " + haslo);
 
 
-                    if (rekord[0][1] == null && rekord[0][2] == null) {
+                    if (sql.UserData[0][1] == null && sql.UserData[0][2] == null) {
                         System.out.println("Nie zalogowano");
                         poleHaslo.setText("");
                         poleNazwaUzytkownika.setText("");
 
                         labelKomunikat.setText("Nieprawidlowe haslo lub nazwa");
                         labelKomunikat.setForeground(Color.RED);
-                    }else if(rekord[0][1].equals(nazwa) && rekord[0][2].equals(haslo)){
-                        new Register();
-                        frame.setVisible(false);
+                    }else if(sql.UserData[0][1].equals(nazwa) && sql.UserData[0][2].equals(haslo)){
+                        int id = Integer.parseInt(sql.UserData[0][0]);
+                        new Menu(id);
+                        frame.dispose();
                     }
 
 
@@ -108,7 +120,11 @@ public class Login implements ActionListener {
             }else{
                 System.out.println("czemó");
             }
+        }
 
+        if(e.getSource() == registerBtn){
+            new Register();
+            frame.dispose();
         }
     }
 }
